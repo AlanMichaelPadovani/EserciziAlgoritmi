@@ -22,17 +22,11 @@ public class EserciziAlgoritmi {
         
         //insertionsort
         insertionSort(array);
-        for(int j:array){
-            System.out.print(j+", ");
-        }
-        System.out.println("");
+        printArray(array);
         
         //insertionsort reverse
-        insertionSortRev(array);
-        for(int j:array){
-            System.out.print(j+", ");
-        }
-        System.out.println("");
+        selectionSort(array);
+        printArray(array);
         
         //somma due numeri binari
         int[] a=buildArray(7,1);
@@ -51,6 +45,7 @@ public class EserciziAlgoritmi {
      * @param r il valore massimo che può avere ogni elemento
      * 
      * @return l'array conforme alle specifiche
+     * Complessità: n
      */
     private static int[] buildArray(int l, int range){
         ++range;
@@ -66,6 +61,7 @@ public class EserciziAlgoritmi {
     * Metodo che stampa un array di interi
     *
     * @param a, l'array da stampare
+    * Complessità: n
     */
     private static void printArray(int[] a){
         int l=a.length,i=0;
@@ -75,6 +71,7 @@ public class EserciziAlgoritmi {
         System.out.println(a[i]);
         return;
     }
+    
     /**
      * Ordina un array di interi usando l'agoritmo insertion sort
      * 
@@ -83,6 +80,8 @@ public class EserciziAlgoritmi {
      * 
      * Output
      * L'array viene ordinato in loco
+     * 
+     * Complessità: n^2
      * 
      **/
     private static void insertionSort(int[] array){
@@ -112,6 +111,8 @@ public class EserciziAlgoritmi {
      * Output
      * L'array viene ordinato in senso decrescente in loco
      * 
+     * Complessità: n^2
+     * 
      * Esercizio 1.1.2 pag 5
      **/
     private static void insertionSortRev(int[] array){
@@ -134,6 +135,26 @@ public class EserciziAlgoritmi {
     
     /**
      * 
+     * Ricerca elemento in un array di interi
+     * 
+     * @param a, l'array in cui fare la ricerca
+     * @param v, il valore da cercare
+     * 
+     * @return la prima occorrenza del valore se presente, -1 altrimenti
+     * 
+     * Complessità: n
+     * 
+     * Esercizio 1.1.3 pag 5
+    */
+    private static int ricLineare(int[] a, int v){
+        int i=0;
+        for(;i<a.length;i++){
+            if(a[i]==v) return i;
+        }
+        return -1;
+    }
+    /**
+     * 
      * Somma due array di interi che rappresentano un numero binario
      * 
      * @param a il primo addendo (binario)
@@ -142,6 +163,9 @@ public class EserciziAlgoritmi {
      * @return la somma dei due numeri (binario)
      * 
      * Attenzione: si suppone codifica corretta e lunghezza array uguale
+     * 
+     * Complessità: n
+     * Esercizio 1.1.4 pag 5
      */
     private static int[] sommaBin(int[] a, int[] b){
         int l=((a.length>b.length)?a.length :b.length)+1; //la lunghezza della somma è lunghezza massimo + 1
@@ -180,6 +204,34 @@ public class EserciziAlgoritmi {
         }
         return c;
     }
+    
+    /**
+     * 
+     * Metodo che ordina un array di interi usando selection sort
+     * @param array, l'array da ordinare
+     * 
+     * Complessità n^2
+     * 
+     * Esercizio 1.2.1 pagina 9
+     */
+    private static void selectionSort(int[] array){
+        int i=0,j,min,temp;
+        for(;i<array.length;i++){
+            //per ogni elemento dell'array
+            min=i;
+            for(j=i+1; j<array.length;j++){
+                if(array[j]<array[min]){
+                    min=j;
+                }
+            }
+            if(min!=i){
+                temp=array[i];
+                array[i]=array[min];
+                array[min]=temp;
+            }
+        }
+    }
+    
     private static void heapify(Node[] array, int i){
         Node left=array[i].getLeft();
         Node right=array[i].getRight();
