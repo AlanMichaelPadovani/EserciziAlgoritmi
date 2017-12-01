@@ -15,27 +15,66 @@ public class EserciziAlgoritmi {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Random r= new Random();
-        int[] array=new int[20];
-        for(int i=0; i<20; i++){
-            array[i]= r.nextInt(101);
-        }
-        for(int j:array){
-            System.out.print(j+", ");
-        }
-        System.out.println("");
+        //array di 20 interi
+        
+        int[] array=buildArray(20,101);
+        printArray(array);
+        
+        //insertionsort
         insertionSort(array);
         for(int j:array){
             System.out.print(j+", ");
         }
         System.out.println("");
-        insertionSort(array);
+        
+        //insertionsort reverse
+        insertionSortRev(array);
         for(int j:array){
             System.out.print(j+", ");
         }
         System.out.println("");
+        
+        //somma due numeri binari
+        int[] a=buildArray(7,1);
+        int[] b=buildArray(7,1);
+        System.out.println("Somma di due numeri binari:");
+        printArray(a);
+        printArray(b);
+        int[] c=sommaBin(a,b);
+        printArray(c);
     }
     
+    /**
+     * Metodo che crea un array di interi in un certo range della lunghezza voluta
+     * 
+     * @param l lunghezza dell'array
+     * @param r il valore massimo che può avere ogni elemento
+     * 
+     * @return l'array conforme alle specifiche
+     */
+    private static int[] buildArray(int l, int range){
+        ++range;
+        Random r= new Random();
+        int[] a=new int[l];
+        for(int i=0;i<l;i++){
+            a[i]=r.nextInt(range);
+        }
+        return a;
+    }
+    
+    /*
+    * Metodo che stampa un array di interi
+    *
+    * @param a, l'array da stampare
+    */
+    private static void printArray(int[] a){
+        int l=a.length,i=0;
+        for(; i<(l-1); i++){
+            System.out.print(a[i]+", ");
+        }
+        System.out.println(a[i]);
+        return;
+    }
     /**
      * Ordina un array di interi usando l'agoritmo insertion sort
      * 
@@ -93,7 +132,55 @@ public class EserciziAlgoritmi {
         return;
     }
     
-    private void heapify(Node[] array, int i){
+    /**
+     * 
+     * Somma due array di interi che rappresentano un numero binario
+     * 
+     * @param a il primo addendo (binario)
+     * @param b il secondo addendo (binario)
+     *
+     * @return la somma dei due numeri (binario)
+     * 
+     * Attenzione: si suppone codifica corretta e lunghezza array uguale
+     */
+    private static int[] sommaBin(int[] a, int[] b){
+        int l=((a.length>b.length)?a.length :b.length)+1; //la lunghezza della somma è lunghezza massimo + 1
+        int [] c= new int[l]; //creo array risultato
+        
+        //da aggiornare per gestire lunghezze diverse
+        int r=0,i=0; //bit di riporto
+        for(; i<(l-1); i++){
+            if(r==0){ //non c'è riporto
+                if(a[i]==b[i] && a[i]==1){ //sommo due 1
+                    c[i]=0;
+                    r=1;
+                }else{
+                    c[i]=a[i]+b[i]; //sommo i due numeri binari
+                }
+            }else{//c'è riporto
+                if(a[i]==b[i]){//sono uguali
+                    if(a[i]==1){//entrambi 1
+                        c[i]=1;
+                    }else{//entrambi 0
+                        c[i]=1;
+                        r=0;
+                    }
+                }else{
+                    //sono diversi
+                    c[i]=0;
+                }
+            }
+            
+        }
+        //cifra più significativa
+        if(r==1){
+            c[i]=1;
+        }else{
+            c[i]=0;
+        }
+        return c;
+    }
+    private static void heapify(Node[] array, int i){
         Node left=array[i].getLeft();
         Node right=array[i].getRight();
         
