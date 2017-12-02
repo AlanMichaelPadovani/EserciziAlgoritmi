@@ -36,6 +36,17 @@ public class EserciziAlgoritmi {
         printArray(b);
         int[] c=sommaBin(a,b);
         printArray(c);
+        
+        //valutare un polinomio
+        int [] p=buildArray(3,4);
+        System.out.print("Polinomio: ");
+        printArray(p);
+        System.out.println("Il polinomio valutato in 0: "+polinomio(p,0));
+        System.out.println("Il polinomio valutato in 1: "+polinomio(p,1));
+        System.out.println("Il polinomio valutato in 2: "+polinomio(p,2));
+        System.out.println("Il polinomio valutato in 0: "+polinomioHorner(p,0,p.length-1));
+        System.out.println("Il polinomio valutato in 1: "+polinomioHorner(p,1,p.length-1));
+        System.out.println("Il polinomio valutato in 2: "+polinomioHorner(p,2,p.length-1));
     }
     
     /**
@@ -232,6 +243,54 @@ public class EserciziAlgoritmi {
         }
     }
     
+    /**
+     * 
+     * Metodo che valuta un polinomio in un punto
+     * 
+     * @param c, il vettore dei coefficienti del polinomio (il più significativo è il primo)
+     * @param x, il punto in cui valutare il polinomio
+     * 
+     * @return un intero che rappresente il polinomio valutato in x
+     * 
+     * Complessità: n^2
+     * 
+     * Esercizio 1.2.3 pagina 10
+     */
+    private static int polinomio(int[] c, int x){
+        int r=0,grado=c.length-1,potenza=1;
+        for(int i=0; i<c.length; i++){
+            //scorro il vettore dei coefficienti
+            potenza=1;
+            for(int j=(grado-i); j>0; j--){
+                potenza=potenza*x; //ottengo la potenza relativa
+            }
+            r=r+potenza*c[i]; //aggiungo la potenza moltiplicata per il suo coefficiente
+        }
+        return r;
+    }
+    
+    /**
+     * Valuta un polinomio secondo la regola di Horner
+     * an*x^n+a(n-1)*x^(n-1)+a(n-2)*x^(n-2)+...+a0
+     * =
+     * (..((an*x+a(n-1))*x+a(n-2))*x+...+a1)x+a0
+     * @param c, un vettore che rappresenti i coefficienti del polinomio
+     * @param x, il punto in cui valutare il polinomio
+     * @param grado, il grado in cui sono arrivato nel passo ricorsivo
+     * 
+     * @return il valore del polinomio nel punto dato
+     * 
+     * Complessità: n
+     * 
+     * Esercizio 1.2.3 pagina 10
+     */
+    private static int polinomioHorner(int[] c, int x, int grado){
+           if(grado==0){
+               return c[c.length-grado-1];
+           }else{
+               return c[c.length-grado-1]*x+polinomioHorner(c,x,--grado);
+           }
+    }
     private static void heapify(Node[] array, int i){
         Node left=array[i].getLeft();
         Node right=array[i].getRight();
