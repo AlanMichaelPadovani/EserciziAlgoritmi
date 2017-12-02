@@ -44,9 +44,9 @@ public class EserciziAlgoritmi {
         System.out.println("Il polinomio valutato in 0: "+polinomio(p,0));
         System.out.println("Il polinomio valutato in 1: "+polinomio(p,1));
         System.out.println("Il polinomio valutato in 2: "+polinomio(p,2));
-        System.out.println("Il polinomio valutato in 0: "+polinomioHorner(p,0,p.length-1));
-        System.out.println("Il polinomio valutato in 1: "+polinomioHorner(p,1,p.length-1));
-        System.out.println("Il polinomio valutato in 2: "+polinomioHorner(p,2,p.length-1));
+        System.out.println("Il polinomio valutato in 0: "+polinomioHorner(p,0));
+        System.out.println("Il polinomio valutato in 1: "+polinomioHorner(p,1));
+        System.out.println("Il polinomio valutato in 2: "+polinomioHorner(p,2));
     }
     
     /**
@@ -276,7 +276,6 @@ public class EserciziAlgoritmi {
      * (..((an*x+a(n-1))*x+a(n-2))*x+...+a1)x+a0
      * @param c, un vettore che rappresenti i coefficienti del polinomio
      * @param x, il punto in cui valutare il polinomio
-     * @param grado, il grado in cui sono arrivato nel passo ricorsivo
      * 
      * @return il valore del polinomio nel punto dato
      * 
@@ -284,12 +283,12 @@ public class EserciziAlgoritmi {
      * 
      * Esercizio 1.2.3 pagina 10
      */
-    private static int polinomioHorner(int[] c, int x, int grado){
-           if(grado==0){
-               return c[c.length-grado-1];
-           }else{
-               return c[c.length-grado-1]*x+polinomioHorner(c,x,--grado);
-           }
+    private static int polinomioHorner(int[] c, int x){
+            int r=c[0];
+            for(int i=1; i<c.length;i++){
+               r=r*x+c[i];
+            }
+            return r;
     }
     private static void heapify(Node[] array, int i){
         Node left=array[i].getLeft();
