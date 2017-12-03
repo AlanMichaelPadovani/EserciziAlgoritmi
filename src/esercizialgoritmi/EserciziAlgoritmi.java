@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package esercizialgoritmi;
+import esercizialgoritmi.rb.RBNode;
+import esercizialgoritmi.rb.UtilityRBTree;
+import java.util.HashMap;
 import java.util.Random;
 /**
  *
@@ -17,36 +20,42 @@ public class EserciziAlgoritmi {
     public static void main(String[] args) {
         //array di 20 interi
         
-        int[] array=buildArray(20,101);
-        printArray(array);
+//        int[] array=buildArray(20,101);
+//        printArray(array);
+//        
+//        //insertionsort
+//        insertionSort(array);
+//        printArray(array);
+//        
+//        //insertionsort reverse
+//        selectionSort(array);
+//        printArray(array);
+//        
+//        //somma due numeri binari
+//        int[] a=buildArray(7,1);
+//        int[] b=buildArray(7,1);
+//        System.out.println("Somma di due numeri binari:");
+//        printArray(a);
+//        printArray(b);
+//        int[] c=sommaBin(a,b);
+//        printArray(c);
+//        
+//        //valutare un polinomio
+//        int [] p=buildArray(3,4);
+//        System.out.print("Polinomio: ");
+//        printArray(p);
+//        System.out.println("Il polinomio valutato in 0: "+polinomio(p,0));
+//        System.out.println("Il polinomio valutato in 1: "+polinomio(p,1));
+//        System.out.println("Il polinomio valutato in 2: "+polinomio(p,2));
+//        System.out.println("Il polinomio valutato in 0: "+polinomioHorner(p,0));
+//        System.out.println("Il polinomio valutato in 1: "+polinomioHorner(p,1));
+//        System.out.println("Il polinomio valutato in 2: "+polinomioHorner(p,2));
         
-        //insertionsort
-        insertionSort(array);
-        printArray(array);
-        
-        //insertionsort reverse
-        selectionSort(array);
-        printArray(array);
-        
-        //somma due numeri binari
-        int[] a=buildArray(7,1);
-        int[] b=buildArray(7,1);
-        System.out.println("Somma di due numeri binari:");
-        printArray(a);
-        printArray(b);
-        int[] c=sommaBin(a,b);
-        printArray(c);
-        
-        //valutare un polinomio
-        int [] p=buildArray(3,4);
-        System.out.print("Polinomio: ");
-        printArray(p);
-        System.out.println("Il polinomio valutato in 0: "+polinomio(p,0));
-        System.out.println("Il polinomio valutato in 1: "+polinomio(p,1));
-        System.out.println("Il polinomio valutato in 2: "+polinomio(p,2));
-        System.out.println("Il polinomio valutato in 0: "+polinomioHorner(p,0));
-        System.out.println("Il polinomio valutato in 1: "+polinomioHorner(p,1));
-        System.out.println("Il polinomio valutato in 2: "+polinomioHorner(p,2));
+        int height = 3;
+        RBNode root = UtilityRBTree.buildRandomRBTree(null, 20, false, height, null);
+        HashMap<RBNode,Integer> values = new HashMap<>();
+        //values = UtilityRBTree.loadRBTree(root, height, values);
+        //UtilityRBTree.printRBTree(height, values);
     }
     
     /**
