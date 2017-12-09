@@ -5,8 +5,6 @@
  */
 package esercizialgoritmi.rb;
 
-import esercizialgoritmi.Node;
-
 /**
  *
  * @author Francesco
@@ -23,6 +21,15 @@ public class RBNode extends Node {
     public RBNode(int color, Node parent, int value, Node left_node, Node right_node) {
         super(parent, value, left_node, right_node);
         this.color = color;
+    }
+    
+    /**
+     * Costruttore di copia
+     * @param to_copy 
+     */
+    public RBNode(RBNode to_copy){
+        super(to_copy);
+        this.color = to_copy.color;
     }
     
     public int getColor() {

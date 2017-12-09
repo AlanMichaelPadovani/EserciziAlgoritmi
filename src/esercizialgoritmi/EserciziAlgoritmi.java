@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package esercizialgoritmi;
+import esercizialgoritmi.rb.Node;
 import esercizialgoritmi.rb.RBNode;
 import esercizialgoritmi.rb.UtilityRBTree;
 import java.util.HashMap;
@@ -51,11 +52,73 @@ public class EserciziAlgoritmi {
 //        System.out.println("Il polinomio valutato in 1: "+polinomioHorner(p,1));
 //        System.out.println("Il polinomio valutato in 2: "+polinomioHorner(p,2));
         
-        int height = 3;
-        RBNode root = UtilityRBTree.buildRandomRBTree(null, 20, false, height, null);
-        HashMap<RBNode,Integer> values = new HashMap<>();
+        //int height = 3;
+        //RBNode root = UtilityRBTree.buildRandomRBTree(null, 20, false, height, null);
+        //HashMap<RBNode,Integer> values = new HashMap<>();
         //values = UtilityRBTree.loadRBTree(root, height, values);
         //UtilityRBTree.printRBTree(height, values);
+        
+        //
+        //      Prova stampa albero
+        //
+        Node root1=new Node(null,0,null,null);
+        Node node1=new Node(root1,1,null,null);
+        Node node2=new Node(root1,2,null,null);
+        root1.setLeft(node1);
+        root1.setRight(node2);
+        Node node3=new Node(node1,3,null,null);
+        Node node4=new Node(node1,4,null,null);
+        node1.setLeft(node3);
+        node1.setRight(node4);
+        Node node5=new Node(node2,5,null,null);
+        node2.setLeft(node5);
+        Node node6=new Node(node5,6,null,null);
+        node5.setLeft(node6);
+        Node node7=new Node(node6,7,null,null);
+        node6.setRight(node7);
+        Node node8=new Node(node7,8,null,null);
+        node7.setLeft(node8);
+        Node node9=new Node(node4,9,null,null);
+        node4.setRight(node9);
+        root1.print(0);
+        
+        //ricerca
+        /**
+        int key=2;
+        Node find=root1.search(key);
+        if(find==null){
+            System.out.println("L'albero non conteneva "+key);
+        }else{
+            System.out.println("L'albero conteneva "+key);
+        }
+        find=new Node(null,2,null,null);
+        */
+        
+        //inserimento
+        /**
+        Node.insert(root1,find);
+        root1.print(0);
+        */
+        
+        //eliminazione
+        System.out.println("Elimino nodo 9");
+        root1=Node.delete(root1, node9);
+        root1.print(0);
+        System.out.println("Elimino nodo 7");
+        root1=Node.delete(root1, node7);
+        root1.print(0);
+        System.out.println("Elimino nodo 5");
+        root1=Node.delete(root1, node5);
+        root1.print(0);
+        System.out.println("Elimino nodo 2");
+        root1=Node.delete(root1, node2);
+        root1.print(0);
+        System.out.println("Il minimo è "+root1.min());
+        System.out.println("Il massimo è "+root1.max());
+        System.out.println("Il successore di 1 è "+node1.successore());
+        System.out.println("Elimino radice!");
+        root1=Node.delete(root1, root1);
+        root1.print(0);
     }
     
     /**
