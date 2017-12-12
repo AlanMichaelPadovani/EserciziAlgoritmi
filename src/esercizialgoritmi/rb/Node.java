@@ -10,10 +10,13 @@ package esercizialgoritmi.rb;
  * @author AlanMichael
  */
 public class Node {
-    private int value;
-    private Node parent;
-    private Node left;
-    private Node right;
+    protected int value;
+    protected Node parent;
+    protected Node left;
+    protected Node right;
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
     
     public Node(Node parent, int value, Node left_node, Node right_node){
         this.parent=parent;
@@ -126,12 +129,14 @@ public class Node {
         if(newNode.value>root.value){//il nodo ha valore maggiore della radice
             if(root.right==null){ //non ha figlio destro
                 root.right=newNode;
+                newNode.parent=root;
                 return;
             }
             insert(root.right,newNode);
         }else{ //il nodo ha valore minore o uguale della radice
             if(root.left==null){ //non ha figlio destro
                 root.left=newNode;
+                newNode.parent=root;
                 return;
             }
             insert(root.left,newNode);

@@ -80,7 +80,7 @@ public class EserciziAlgoritmi {
         node7.setLeft(node8);
         Node node9=new Node(node4,9,null,null);
         node4.setRight(node9);
-        root1.print(0);
+        //root1.print(0);
         
         //ricerca
         /**
@@ -100,6 +100,7 @@ public class EserciziAlgoritmi {
         root1.print(0);
         */
         
+        /**
         //eliminazione
         System.out.println("Elimino nodo 9");
         root1=Node.delete(root1, node9);
@@ -119,6 +120,24 @@ public class EserciziAlgoritmi {
         System.out.println("Elimino radice!");
         root1=Node.delete(root1, root1);
         root1.print(0);
+        */
+        
+        //RBAlberi
+        RBNode rbRoot=new RBNode(0,null,11,null,null);
+        RBNode.insert(rbRoot,new RBNode(1,null,2,null,null));
+        RBNode.insert(rbRoot,new RBNode(0,null,14,null,null));
+        RBNode.insert(rbRoot,new RBNode(0,null,1,null,null));
+        rbRoot.print(0);
+        /**
+        RBNode.insert(rbRoot,new RBNode(1,null,15,null,null));
+        RBNode.insert(rbRoot,new RBNode(0,null,7,null,null));
+        RBNode.insert(rbRoot,new RBNode(1,null,8,null,null));
+        RBNode.insert(rbRoot,new RBNode(1,null,5,null,null));
+        RBNode.insert(rbRoot,new RBNode(0,null,4,null,null));
+        */
+        
+        
+        
     }
     
     /**
