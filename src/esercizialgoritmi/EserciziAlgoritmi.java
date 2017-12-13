@@ -124,17 +124,16 @@ public class EserciziAlgoritmi {
         
         //RBAlberi
         RBNode rbRoot=new RBNode(0,null,11,null,null);
+        RBNode.insert(null, rbRoot);
         RBNode.insert(rbRoot,new RBNode(1,null,2,null,null));
         RBNode.insert(rbRoot,new RBNode(0,null,14,null,null));
         RBNode.insert(rbRoot,new RBNode(0,null,1,null,null));
-        rbRoot.print(0);
-        /**
         RBNode.insert(rbRoot,new RBNode(1,null,15,null,null));
         RBNode.insert(rbRoot,new RBNode(0,null,7,null,null));
         RBNode.insert(rbRoot,new RBNode(1,null,8,null,null));
         RBNode.insert(rbRoot,new RBNode(1,null,5,null,null));
         RBNode.insert(rbRoot,new RBNode(0,null,4,null,null));
-        */
+        rbRoot.print(0);
         
         
         

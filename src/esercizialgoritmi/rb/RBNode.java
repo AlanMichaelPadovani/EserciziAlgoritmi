@@ -111,25 +111,27 @@ public class RBNode extends Node{
         }
         i--;
     }
-    private static void insertAnomaly(RBNode root, RBNode newNode){
+    private static RBNode insertAnomaly(RBNode root, RBNode newNode){
         if(root==null){//albero vuoto
-            root=new RBNode(newNode); //inserisco nodo attuale al posto dell'albero vuoto
-            return;
+            return newNode;//inserisco nodo attuale al posto dell'albero vuoto
         }
+        RBNode root1=root; //salvo la radice iniziale
         if(newNode.value>root.value){//il nodo ha valore maggiore della radice
             if(root.right==null){ //non ha figlio destro
                 root.right=newNode;
-                return;
+                newNode.parent=root;
+                return root1;
             }
-            insert(root.right,newNode);
+            insert(root.right,newNode,root.right);
         }else{ //il nodo ha valore minore o uguale della radice
             if(root.left==null){ //non ha figlio destro
                 root.left=newNode;
-                return;
+                newNode.parent=root;
+                return root1;
             }
-            insert(root.left,newNode);
+            insert(root.left,newNode,root.left);
         }
-        return;
+        return root1;
     }
     public static RBNode ruota_sx(RBNode root, RBNode node){
         if(root==null) return root; //albero vuoto
@@ -195,10 +197,14 @@ public class RBNode extends Node{
     }
     
     public static void insert(RBNode root, RBNode newNode){
-        insertAnomaly(root,newNode);
+        newNode.color=1; //inserisco nodo rosso
+        
+        root=insertAnomaly(root,newNode);
+        root.print(0);
+        System.out.println("");
         //ora newNode è stato inserito ed è una anomolia
         //controllare errore se il padre non esiste
-        while(newNode!=root && newNode.parent!=null && newNode.getRBParent().color==1){
+        while(newNode!=root && newNode.getRBParent().color==1){
             //non siamo radice e il padre è rosso
             if(newNode.parent==newNode.parent.parent.left){
                 //il padre è figlio sinistro

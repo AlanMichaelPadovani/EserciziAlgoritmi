@@ -119,28 +119,30 @@ public class Node {
      * @param root, la radice dell'albero in cui inserire
      * @param newNode, il nodo da inserire
      * 
+     * @return la radice dell'albero col nuovo nodo inserito
+     * 
      * Complessità: log2(n)
      */
-    public static void insert(Node root, Node newNode){
+    public static Node insert(Node root, Node newNode,Node real_root){
         if(root==null){//albero vuoto
-            root=new Node(newNode); //inserisco nodo attuale al posto dell'albero vuoto
-            return;
+            return newNode; //inserisco nodo attuale al posto dell'albero vuoto
         }
         if(newNode.value>root.value){//il nodo ha valore maggiore della radice
             if(root.right==null){ //non ha figlio destro
                 root.right=newNode;
                 newNode.parent=root;
-                return;
+                return real_root;
             }
-            insert(root.right,newNode);
+            insert(root.right,newNode,real_root);
         }else{ //il nodo ha valore minore o uguale della radice
             if(root.left==null){ //non ha figlio destro
                 root.left=newNode;
                 newNode.parent=root;
-                return;
+                return real_root;
             }
-            insert(root.left,newNode);
+            insert(root.left,newNode,real_root);
         }
+        return real_root;
     }
     
     /**
