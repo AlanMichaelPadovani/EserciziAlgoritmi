@@ -66,6 +66,7 @@ public class Node {
     }
     @Override
     public String toString(){
+        if(this==null) return null;
         return (""+value);
     }
     
@@ -94,6 +95,89 @@ public class Node {
     }
     
     /**
+     * Metodo che ruota a sx un albero, sul nodo passato
+     * 
+     * @param root, la radice dell'albero in cui operare
+     * @param node, il nodo su cui effettuare la rotazione
+     * @return la radice dell'albero ruotato
+     * 
+     * Complessità: c
+     */
+    public static Node ruota_sx(Node root, Node node){
+        if(root==null) return root; //albero vuoto
+        //memorizzo situazione iniziale
+        Node oldroot=node;
+        if(oldroot==null) return root; //non esiste il nodo passato
+        Node oldright=node.right;
+        if(oldright==null) return root; //non c'è figlio destro non posso ruotare
+        if(oldroot.parent!=null){
+            //la radice aveva un padre
+            //aggiorno il suo puntatore al figlio dopo la rotazione
+            if(oldroot.parent.left==oldroot){
+                //la radice era figlia sinistra
+                oldroot.parent.left=oldright;
+            }else{
+                //la radice era figlia destra
+                oldroot.parent.right=oldright;
+            }
+        }else{
+            //sto ruotando la radice
+            root=oldright;
+        }
+        //effettuo la rotazione
+        oldright.parent=oldroot.parent; //collego la nuova radice al padre della vecchia
+        oldroot.parent=oldroot.right; //il padre della radice vecchia è il suo figlio destro
+        oldroot.right=oldright.left; //il figlio destro della radice è il figlio sinistro del suo figlio destro
+        if(oldright.left!=null){
+            oldright.left.parent=oldroot; //aggiorno anche il relativo figlio
+        }
+        oldright.left=oldroot; //il figlio destro della radice è la radice (prima della rotazione)
+        
+        return root;
+    }
+    
+    /**
+     * Metodo che ruota a dx un rbalbero, sul nodo passato
+     * 
+     * @param root, la radice dell'albero in cui operare
+     * @param node, il nodo su cui effettuare la rotazione
+     * @return la radice dell'albero ruotato
+     * 
+     * Complessità: c
+     */
+    public static Node ruota_dx(Node root, Node node){
+        if(root==null) return root; //albero vuoto
+        //memorizzo situazione iniziale
+        Node oldroot=node;
+        if(oldroot==null) return root; //non esiste il nodo passato
+        Node oldleft=node.left;
+        if(oldleft==null) return root; //non c'è figlio sinsitro non posso ruotare
+        if(oldroot.parent!=null){
+            //la radice aveva un padre
+            //aggiorno il suo puntatore al figlio dopo la rotazione
+            if(oldroot.parent.left==oldroot){
+                //la radice era figlia sinistra
+                oldroot.parent.left=oldleft;
+            }else{
+                //la radice era figlia destra
+                oldroot.parent.right=oldleft;
+            }
+        }else{
+            //sto ruotando la radice
+            root=oldleft;
+        }
+        //effettuo la rotazione
+        oldleft.parent=oldroot.parent; //collego la nuova radice al padre della vecchia
+        oldroot.parent=oldroot.left; //il padre della radice vecchia è il suo figlio sinsitro
+        oldroot.left=oldleft.right; //il figlio sinsitro della radice è il figlio destro del suo figlio sinsitro (prima della rotazione)
+        if(oldleft.right!=null){
+            oldleft.right.parent=oldroot; //aggiorno anche il relativo figlio
+        }
+        oldleft.right=oldroot; //il figlio destro della radice è la radice (prima della rotazione)
+        return root;
+    }
+    
+    /**
      * Metodo che cerca un nodo con una certa chiave nell'albero passato
      * 
      * @param key, la chiave da cercare nell'albero
@@ -114,6 +198,49 @@ public class Node {
     }
     
     /**
+     * Metodo che pre-visita un albero (prima nodo attuale, poi figlio sx e dx)
+     *
+     * Complessità: n
+     */
+    private void pre_visit(){
+        if(this!=null){
+            System.out.print(this+", ");
+            this.left.pre_visit();
+            this.right.pre_visit();
+        }
+        return;
+    }
+    
+    /**
+     * Metodo che in-visita un albero (prima figlio sx, poi nodo attuale e figlio dx)
+     *
+     * Complessità: n
+     */
+    private void in_visit(){
+        if(this!=null){
+            this.left.in_visit();
+            System.out.print(this+", ");
+            this.right.in_visit();
+        }
+        return;
+    }
+    
+    /**
+     * Metodo che post-visita un albero (prima figlio sx, poi dx  e nodo attuale)
+     *
+     * Complessità: n
+     */
+    private void post_visit(){
+        if(this!=null){
+            System.out.print(this+", ");
+            this.left.post_visit();
+            this.right.post_visit();
+        }
+        return;
+    }
+    
+    
+    /**
      * Metodo che inserisce un nodo in un albero binario di ricerca
      * 
      * @param root, la radice dell'albero in cui inserire
@@ -123,26 +250,28 @@ public class Node {
      * 
      * Complessità: log2(n)
      */
-    public static Node insert(Node root, Node newNode,Node real_root){
+    public static Node insert(Node root, Node newNode){
         if(root==null){//albero vuoto
             return newNode; //inserisco nodo attuale al posto dell'albero vuoto
         }
-        if(newNode.value>root.value){//il nodo ha valore maggiore della radice
-            if(root.right==null){ //non ha figlio destro
-                root.right=newNode;
-                newNode.parent=root;
-                return real_root;
+        Node real_root=root; //salvo la radice iniziale
+        while(true){
+            if(newNode.value>root.value){//il nodo ha valore maggiore della radice
+                if(root.right==null){ //non ha figlio destro
+                    root.right=newNode;
+                    newNode.parent=root;
+                    return real_root;
+                }
+                root=root.right;
+            }else{ //il nodo ha valore minore o uguale della radice
+                if(root.left==null){ //non ha figlio destro
+                    root.left=newNode;
+                    newNode.parent=root;
+                    return real_root;
+                }
+                root=root.left;
             }
-            insert(root.right,newNode,real_root);
-        }else{ //il nodo ha valore minore o uguale della radice
-            if(root.left==null){ //non ha figlio destro
-                root.left=newNode;
-                newNode.parent=root;
-                return real_root;
-            }
-            insert(root.left,newNode,real_root);
         }
-        return real_root;
     }
     
     /**

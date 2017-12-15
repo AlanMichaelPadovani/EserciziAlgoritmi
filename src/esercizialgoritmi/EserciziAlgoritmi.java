@@ -58,6 +58,7 @@ public class EserciziAlgoritmi {
         //values = UtilityRBTree.loadRBTree(root, height, values);
         //UtilityRBTree.printRBTree(height, values);
         
+        /**
         //
         //      Prova stampa albero
         //
@@ -81,6 +82,7 @@ public class EserciziAlgoritmi {
         Node node9=new Node(node4,9,null,null);
         node4.setRight(node9);
         //root1.print(0);
+        */
         
         //ricerca
         /**
@@ -122,18 +124,22 @@ public class EserciziAlgoritmi {
         root1.print(0);
         */
         
+        
+        
         //RBAlberi
         RBNode rbRoot=new RBNode(0,null,11,null,null);
-        RBNode.insert(null, rbRoot);
-        RBNode.insert(rbRoot,new RBNode(1,null,2,null,null));
-        RBNode.insert(rbRoot,new RBNode(0,null,14,null,null));
-        RBNode.insert(rbRoot,new RBNode(0,null,1,null,null));
-        RBNode.insert(rbRoot,new RBNode(1,null,15,null,null));
-        RBNode.insert(rbRoot,new RBNode(0,null,7,null,null));
-        RBNode.insert(rbRoot,new RBNode(1,null,8,null,null));
-        RBNode.insert(rbRoot,new RBNode(1,null,5,null,null));
-        RBNode.insert(rbRoot,new RBNode(0,null,4,null,null));
+        rbRoot=RBNode.insert(null, rbRoot);
+        rbRoot=RBNode.insert(rbRoot,new RBNode(1,null,2,null,null));
+        rbRoot=RBNode.insert(rbRoot,new RBNode(0,null,14,null,null));
+        rbRoot=RBNode.insert(rbRoot,new RBNode(0,null,1,null,null));
+        rbRoot=RBNode.insert(rbRoot,new RBNode(1,null,15,null,null));
+        rbRoot=RBNode.insert(rbRoot,new RBNode(0,null,7,null,null));
+        rbRoot=RBNode.insert(rbRoot,new RBNode(1,null,8,null,null));
+        rbRoot=RBNode.insert(rbRoot,new RBNode(1,null,5,null,null));
+        rbRoot=RBNode.insert(rbRoot,new RBNode(0,null,4,null,null));
         rbRoot.print(0);
+        
+
         
         
         

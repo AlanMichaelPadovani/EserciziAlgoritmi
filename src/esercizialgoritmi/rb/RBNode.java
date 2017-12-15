@@ -27,14 +27,11 @@ public class RBNode extends Node{
     
     /**
      * Costruttore di copia
-     * @param to_copy 
+     * @param toCopy il nodo cui effettuare la copia
      */
-    public RBNode(Node toCopy){
-        super(toCopy);
-        if(toCopy instanceof RBNode){
-            RBNode toCopy2= (RBNode) toCopy;
-            this.color = toCopy2.color;
-        }
+    public RBNode(RBNode toCopy){
+        super(toCopy.parent,toCopy.value,toCopy.left,toCopy.right);
+        this.color = toCopy.color;
     }
     
     public RBNode getRBParent(){
@@ -85,6 +82,29 @@ public class RBNode extends Node{
         }
     }
     
+    /**
+     * Metodo che ritorna l'altezza nera di un nodo
+     * 
+     * @return l'altezza nera del nodo
+     * 
+     * Complessità: log2n
+     */
+    public int getBH(){
+        int bh=0; //all'inizio altezza nera è 0
+        RBNode left_son=this.getRBLeft();
+        while(left_son!=null){//finché ci sono figli sx
+            if(left_son.color==0) bh++; //ha un figlio nero
+            left_son=left_son.getRBLeft();
+        }
+        return bh;
+    }
+    /**
+     * Metodo che stampa un albero radicato in this
+     * 
+     * @param i, la profondità dell'albero (quando viene chiamato deve essere 0)
+     *
+     * Complessità: n
+     */
     public void print(int i){
         if(this==null) return; //non esiste nodo
         if(this.color==1){
@@ -111,28 +131,16 @@ public class RBNode extends Node{
         }
         i--;
     }
-    private static RBNode insertAnomaly(RBNode root, RBNode newNode){
-        if(root==null){//albero vuoto
-            return newNode;//inserisco nodo attuale al posto dell'albero vuoto
-        }
-        RBNode root1=root; //salvo la radice iniziale
-        if(newNode.value>root.value){//il nodo ha valore maggiore della radice
-            if(root.right==null){ //non ha figlio destro
-                root.right=newNode;
-                newNode.parent=root;
-                return root1;
-            }
-            insert(root.right,newNode,root.right);
-        }else{ //il nodo ha valore minore o uguale della radice
-            if(root.left==null){ //non ha figlio destro
-                root.left=newNode;
-                newNode.parent=root;
-                return root1;
-            }
-            insert(root.left,newNode,root.left);
-        }
-        return root1;
-    }
+    
+    /**
+     * Metodo che ruota a sx un rbalbero, sul nodo passato
+     * 
+     * @param root, la radice dell'albero in cui operare
+     * @param node, il nodo su cui effettuare la rotazione
+     * @return la radice dell'albero ruotato
+     * 
+     * Complessità: c
+     */
     public static RBNode ruota_sx(RBNode root, RBNode node){
         if(root==null) return root; //albero vuoto
         //memorizzo situazione iniziale
@@ -143,7 +151,7 @@ public class RBNode extends Node{
         if(oldroot.getRBParent()!=null){
             //la radice aveva un padre
             //aggiorno il suo puntatore al figlio dopo la rotazione
-            if(oldroot.getRBParent().getLeft()==oldroot){
+            if(oldroot.getRBParent().getRBLeft()==oldroot){
                 //la radice era figlia sinistra
                 oldroot.getRBParent().left=oldright;
             }else{
@@ -152,19 +160,29 @@ public class RBNode extends Node{
             }
         }else{
             //sto ruotando la radice
-            
             root=oldright;
         }
         //effettuo la rotazione
+        oldright.parent=oldroot.parent; //collego la nuova radice al padre della vecchia
         oldroot.parent=oldroot.right; //il padre della radice vecchia è il suo figlio destro
         oldroot.right=oldright.left; //il figlio destro della radice è il figlio sinistro del suo figlio destro
         if(oldright.left!=null){
             oldright.left.parent=oldroot; //aggiorno anche il relativo figlio
         }
         oldright.left=oldroot; //il figlio destro della radice è la radice (prima della rotazione)
+        
         return root;
     }
     
+    /**
+     * Metodo che ruota a dx un rbalbero, sul nodo passato
+     * 
+     * @param root, la radice dell'albero in cui operare
+     * @param node, il nodo su cui effettuare la rotazione
+     * @return la radice dell'albero ruotato
+     * 
+     * Complessità: c
+     */
     public static RBNode ruota_dx(RBNode root, RBNode node){
         if(root==null) return root; //albero vuoto
         //memorizzo situazione iniziale
@@ -175,7 +193,7 @@ public class RBNode extends Node{
         if(oldroot.getRBParent()!=null){
             //la radice aveva un padre
             //aggiorno il suo puntatore al figlio dopo la rotazione
-            if(oldroot.getRBParent().getLeft()==oldroot){
+            if(oldroot.getRBParent().getRBLeft()==oldroot){
                 //la radice era figlia sinistra
                 oldroot.getRBParent().left=oldleft;
             }else{
@@ -187,6 +205,7 @@ public class RBNode extends Node{
             root=oldleft;
         }
         //effettuo la rotazione
+        oldleft.parent=oldroot.parent; //collego la nuova radice al padre della vecchia
         oldroot.parent=oldroot.left; //il padre della radice vecchia è il suo figlio sinsitro
         oldroot.left=oldleft.right; //il figlio sinsitro della radice è il figlio destro del suo figlio sinsitro (prima della rotazione)
         if(oldleft.right!=null){
@@ -196,12 +215,19 @@ public class RBNode extends Node{
         return root;
     }
     
-    public static void insert(RBNode root, RBNode newNode){
+    /**
+     * Metodo che inserisce in un rbalbero un nodo dato
+     * 
+     * @param root, la radice dell'rbalbero in cui fare l'inserimento
+     * @param newNode, il nodo da inserire
+     * 
+     * @return la radice dell'rbalbero col nuovo nodo inserito
+     * 
+     * Complessità: log2(n)
+     */
+    public static RBNode insert(RBNode root, RBNode newNode){
         newNode.color=1; //inserisco nodo rosso
-        
-        root=insertAnomaly(root,newNode);
-        root.print(0);
-        System.out.println("");
+        root=(RBNode) Node.insert(root,newNode);
         //ora newNode è stato inserito ed è una anomolia
         //controllare errore se il padre non esiste
         while(newNode!=root && newNode.getRBParent().color==1){
@@ -221,13 +247,13 @@ public class RBNode extends Node{
                         if(newNode==newNode.getRBParent().getRBRight()){
                             //l'anomalia è figlio destro caso 2
                             newNode=newNode.getRBParent(); //sposto anomalia sul padre
-                            ruota_sx(root,newNode); //ruoto il sottoalbero radicato nel padre a sx
+                            root=ruota_sx(root,newNode); //ruoto il sottoalbero radicato nel padre a sx
                             //mi riconduco al caso 3
                         }
                         //l'anomalia è figlio sinistro caso 3
                         newNode.getRBParent().color=0; //padre nero
                         newNode.getRBParent().getRBParent().color=1; //nonno rosso
-                        ruota_dx(root,newNode.getRBParent().getRBParent()); //ruoto a destra sul nonno
+                        root=ruota_dx(root,newNode.getRBParent().getRBParent()); //ruoto a destra sul nonno
                     }
                 }else{
                     //lo zio non esiste
@@ -250,13 +276,13 @@ public class RBNode extends Node{
                         if(newNode==newNode.getRBParent().getRBLeft()){
                             //l'anomalia è figlio sinistro caso 2
                             newNode=newNode.getRBParent(); //sposto anomalia sul padre
-                            ruota_sx(root,newNode); //ruoto il sottoalbero radicato nel padre a sx
+                            root=ruota_sx(root,newNode); //ruoto il sottoalbero radicato nel padre a sx
                             //mi riconduco al caso 3
                         }
                         //l'anomalia è figlio destro caso 3
                         newNode.getRBParent().color=0; //padre nero
                         newNode.getRBParent().getRBParent().color=1; //nonno rosso
-                        ruota_dx(root,newNode.getRBParent().getRBParent()); //ruoto a destra sul nonno
+                        root=ruota_dx(root,newNode.getRBParent().getRBParent()); //ruoto a destra sul nonno
                     }
                 }else{
                     //lo zio non esiste
@@ -267,6 +293,6 @@ public class RBNode extends Node{
             }
         }
         root.color=0; //radice nera
-        return;
+        return root;
     }
 }
