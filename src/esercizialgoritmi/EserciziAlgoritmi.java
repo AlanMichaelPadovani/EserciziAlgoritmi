@@ -137,10 +137,30 @@ public class EserciziAlgoritmi {
         rbRoot=RBNode.insert(rbRoot,new RBNode(1,null,8,null,null));
         rbRoot=RBNode.insert(rbRoot,new RBNode(1,null,5,null,null));
         rbRoot=RBNode.insert(rbRoot,new RBNode(0,null,4,null,null));
+        rbRoot=RBNode.insert(rbRoot,new RBNode(0,null,3,null,null));
+        //prova eliminazione
+        System.out.println("Albero iniziale");
         rbRoot.print(0);
-        
-
-        
+        System.out.println("Elimino nodi rossi");
+        //elimino nodo rosso senza figli
+        System.out.println("elimino un nodo rosso senza figli: 3");
+        rbRoot=RBNode.delete(rbRoot, rbRoot.getRBLeft().getRBRight().getRBLeft());
+        rbRoot.print(0);
+        System.out.println("Albero inziale");
+        RBNode rbRoot2=new RBNode(0,null,4,null,null);
+        RBNode left=new RBNode(1,rbRoot2,2,null,null);
+        rbRoot2.setLeft(left);
+        RBNode son=new RBNode(0,left,1,null,null);
+        left.setLeft(son);
+        rbRoot2.print(0);
+        System.out.println("elimino un nodo rosso con un figlio: 2");
+        rbRoot2=RBNode.delete(rbRoot2, rbRoot2.getRBLeft());
+        rbRoot2.print(0);
+        System.out.println("Albero iniziale");
+        rbRoot.print(0);
+        System.out.println("elimino un nodo rosso con due figli: 2");
+        rbRoot=RBNode.delete(rbRoot, rbRoot.getRBLeft());
+        rbRoot.print(0);
         
         
     }

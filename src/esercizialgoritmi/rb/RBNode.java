@@ -10,6 +10,8 @@ package esercizialgoritmi.rb;
  * @author Francesco
  */
 public class RBNode extends Node{
+
+    
     
     //0 - black
     //1 - red
@@ -215,6 +217,351 @@ public class RBNode extends Node{
         return root;
     }
     
+    public static RBNode delete(RBNode root, RBNode remNode){
+        if(root==null) return null; //albero vuoto
+        if(remNode==null) return null; //nodo non esiste
+        if(remNode.color==1){
+            //elimino un nodo rosso
+            int num_figli=(remNode.left==null && remNode.right==null ? 0 : (remNode.left!=null && remNode.right!=null ? 2 : 1));
+            if(num_figli==0){
+                //non ha figli
+                if(remNode.getRBParent()!=null){
+                    //ha un padre
+                    if(remNode==remNode.getRBParent().getRBLeft()){
+                        //il nodo è figlio sinistro
+                        remNode.getRBParent().left=null;
+                        return root;
+                    }else{
+                        //il nodo è figlio destro
+                        remNode.getRBParent().right=null;
+                        return root;
+                    }
+                }//sto eliminando la radice
+                return null;
+            }
+            if(num_figli==1){
+                //ha un figlio solo
+                if(remNode.left!=null){
+                    //ha un figlio sinistro
+                    if(remNode.getRBParent()!=null){
+                        if(remNode==remNode.getRBParent().getRBLeft()){
+                            //il nodo da eliminare è figlio sinistro
+                            remNode.getRBParent().left=remNode.getRBLeft();
+                            return root;
+                        }else{
+                            //il nodo da eliminare è figlio destro
+                            remNode.getRBParent().right=remNode.getRBLeft();
+                            return root;
+                        }
+                    }else{
+                        //sto eliminando la radice
+                        root=remNode.getRBLeft();
+                        root.color=0;
+                        return root;
+                    }
+                }else{
+                    //ha un figlio destro
+                    if(remNode.getRBParent()!=null){
+                        if(remNode==remNode.getRBParent().getRBLeft()){
+                            //il nodo da eliminare è figlio sinistro
+                            remNode.getRBParent().left=remNode.getRBRight();
+                            return root;
+                        }else{
+                            //il nodo da eliminare è figlio destro
+                            remNode.getRBParent().right=remNode.getRBRight();
+                            return root;
+                        }
+                    }else{
+                        //sto eliminando la radice
+                        root=remNode.getRBRight();
+                        root.color=0;
+                        return root;
+                    }
+                }
+            }
+            //ha due figli
+            //cerco il minimo nel albero di destra
+            RBNode successore=(RBNode) remNode.right.min();
+            //copio il successore nel nodo da eliminare
+            remNode.value=successore.value;
+            //elimino il successore
+            return delete(root,successore);
+        }else{
+            //sto eliminando nodo nero
+            int num_figli=(remNode.left==null && remNode.right==null ? 0 : (remNode.left!=null && remNode.right!=null ? 2 : 1));
+            if(num_figli==0){
+                //non ha figli
+                if(remNode.parent==null){
+                    //sto eliminando la radice
+                    return null;
+                }else{
+                    if(remNode.getRBParent().getRBLeft()==remNode){
+                        //è figlio sinistro
+                        remNode.getRBParent().left=null;
+                        if(remNode.getRBParent().color==0){
+                            //il padre è nero anomalia sul padre
+                            return delete_fixup(root,remNode.getRBParent());
+                        }else{
+                            //il padre è rosso
+                            remNode.getRBParent().color=0; //lo coloro di nero
+                            return root;
+                        }
+                    }else{
+                        //è figlio destro
+                        remNode.getRBParent().right=null;
+                        if(remNode.getRBParent().color==0){
+                            //il padre è nero anomalia sul padre
+                            return delete_fixup(root,remNode.getRBParent());
+                        }else{
+                            //il padre è rosso
+                            remNode.getRBParent().color=0; //lo coloro di nero
+                            return root;
+                        }
+                    }
+                }
+            }else{
+                if(num_figli==1){
+                    //nodo nero con un figlio
+                    if(remNode.left!=null){
+                        //ha un figlio sinistro
+                        if(remNode.getRBParent()!=null){
+                            //ha un padre
+                            if(remNode.getRBParent().getRBLeft()==remNode){
+                                //il nodo da eliminare è figlio sinistro
+                                remNode.getRBParent().left=remNode.left;
+                                if(remNode.getRBParent().color==0){
+                                    //il padre è nero
+                                    return delete_fixup(root,remNode.getRBParent());
+                                }
+                                //il padre è rosso
+                                remNode.getRBParent().color=0;
+                                return root;
+                            }else{
+                                //il nodo da eliminare è figlio destro
+                                remNode.getRBParent().right=remNode.left;
+                                if(remNode.getRBParent().color==0){
+                                    //il padre è nero
+                                    return delete_fixup(root,remNode.getRBParent());
+                                }
+                                //il padre è rosso
+                                remNode.getRBParent().color=0;
+                                return root;
+                            }
+                        }
+                        //sto eliminando la radice
+                        root=remNode.getRBLeft();
+                        root.color=0;
+                        return root;
+                    }else{
+                        //ha un figlio destro
+                        if(remNode.getRBParent()!=null){
+                            //ha un padre
+                            if(remNode.getRBParent().getRBLeft()==remNode){
+                                //il nodo da eliminare è figlio sinistro
+                                remNode.getRBParent().left=remNode.right;
+                                if(remNode.getRBParent().color==0){
+                                    //il padre è nero
+                                    return delete_fixup(root,remNode.getRBParent());
+                                }
+                                //il padre è rosso
+                                remNode.getRBParent().color=0;
+                                return root;
+                            }else{
+                                //il nodo da eliminare è figlio destro
+                                remNode.getRBParent().right=remNode.right;
+                                if(remNode.getRBParent().color==0){
+                                    //il padre è nero
+                                    return delete_fixup(root,remNode.getRBParent());
+                                }
+                                //il padre è rosso
+                                remNode.getRBParent().color=0;
+                                return root;
+                            }
+                        }
+                        //sto eliminando la radice
+                        root=remNode.getRBRight();
+                        root.color=0;
+                        return root;
+                    }
+                }else{
+                    //nodo nero con due figli
+                    //cerco il minimo nel albero di destra
+                    RBNode successore=(RBNode) remNode.right.min();
+                    //copio il successore nel nodo da eliminare
+                    remNode.value=successore.value;
+                    //elimino il successore
+                    return delete(root,successore);
+                }
+            }
+        }
+    }
+    
+    private static RBNode delete_fixup(RBNode root, RBNode anomaly) {
+        while(anomaly!=root && anomaly.color==0){
+            if(anomaly.getRBParent().left==anomaly){
+                //anomalia figlio sinistro
+                if(anomaly.getRBParent().right!=null){ //prendo il fratello
+                    if(anomaly.getRBParent().getRBRight().color==1){//il fratello è rosso
+                        //caso 1
+                        anomaly.getRBParent().color=1; //il padre rosso
+                        anomaly.getRBParent().getRBRight().color=0; //il fratello nero
+                        //ruoto a sinistra sul padre
+                        root=ruota_sx(root,anomaly.getRBParent());
+                    }
+                    //il fratello è nero
+                    if(anomaly.getRBParent().getRBRight().getRBRight()!=null){
+                        //il fratello ha un figlio destro
+                        if(anomaly.getRBParent().getRBRight().getRBLeft()!=null){
+                            //il fratello ha anche figlio sinistro
+                            if(anomaly.getRBParent().getRBRight().getRBLeft().color==anomaly.getRBParent().getRBRight().getRBRight().color && anomaly.getRBParent().getRBRight().getRBRight().color==0){
+                                //i figli sono entrambi neri
+                                // caso 2
+                                anomaly.getRBParent().getRBRight().color=1; //fratello rosso
+                                anomaly=anomaly.getRBParent(); //anomalia sale sul padre
+                            }else{
+                                //i figli non sono entrambi neri (almeno uno è rosso)
+                                if(anomaly.getRBParent().getRBRight().getRBRight().color==0){
+                                    //il figlio destro del fratello è nero
+                                    //caso 3
+                                    anomaly.getRBParent().getRBRight().color=anomaly.getRBParent().getRBRight().getRBLeft().color; //scambio il colore del fratello col suo figlio sinistro
+                                    anomaly.getRBParent().getRBRight().getRBLeft().color=0; //figlio sinistro del fratello nero
+                                    root=ruota_dx(root,anomaly.getRBParent().getRBRight()); //ruotiamo a dx sul fratello
+                                }else{
+                                    //il figlio destro del fratello è rosso
+                                    //caso 4
+                                    anomaly.getRBParent().getRBRight().color=anomaly.getRBParent().color; //il fratello prende il colore del padre
+                                    anomaly.getRBParent().color=0; //padre nero
+                                    anomaly.getRBParent().getRBRight().getRBRight().color=0; //filgio destro del fratello nero
+                                    root=ruota_sx(root,anomaly.getRBParent());
+                                    anomaly=root; //sposto anomalia su radice perchè caso terminale
+                                }
+                            }
+                        }else{
+                            //il fratello ha solo un figlio destro
+                            if(anomaly.getRBParent().getRBRight().getRBRight().color==0){
+                                //il figlio destro del fratello è nero
+                                //caso 3
+                                anomaly.getRBParent().getRBRight().color=0; //scambio il colore del fratello col suo figlio sinistro
+                                root=ruota_dx(root,anomaly.getRBParent().getRBRight()); //ruotiamo a dx sul fratello
+                            }else{
+                                //il figlio destro del fratello è rosso
+                                //caso 4
+                                anomaly.getRBParent().getRBRight().color=anomaly.getRBParent().color; //il fratello prende il colore del padre
+                                anomaly.getRBParent().color=0; //padre nero
+                                anomaly.getRBParent().getRBRight().getRBRight().color=0; //filgio destro del fratello nero
+                                root=ruota_sx(root,anomaly.getRBParent());
+                                anomaly=root; //sposto anomalia su radice perchè caso terminale
+                            }
+                        }
+                    }else{
+                        //il fratello non ha figlio destro
+                        //come fosse nero
+                        //caso 3
+                        if(anomaly.getRBParent().getRBRight().getRBLeft()!=null){
+                            //il fratello ha però figlio sinitro
+                            anomaly.getRBParent().getRBRight().color=anomaly.getRBParent().getRBRight().getRBLeft().color; //scambio il colore del fratello col suo figlio sinistro
+                            anomaly.getRBParent().getRBRight().getRBLeft().color=0; //figlio sinistro del fratello nero
+                            root=ruota_dx(root,anomaly.getRBParent().getRBRight()); //ruotiamo a dx sul fratello
+                        }else{
+                            //il fratello non ha figli
+                            root=ruota_dx(root,anomaly.getRBParent().getRBRight());
+                        }
+                    }
+                }else{
+                    //il fratello non esiste (come fosse nero)
+                    //allora anche i suoi figli non esistono
+                    /*
+                    * Attenzione assumo che in questo caso anomalia salga
+                    *
+                    *
+                    */
+                    anomaly=anomaly.getRBParent();
+                }
+            }else{
+                //anomalia figlio destro
+                if(anomaly.getRBParent().left!=null){ //prendo il fratello
+                    if(anomaly.getRBParent().getRBLeft().color==1){//il fratello è rosso
+                        //caso 1
+                        anomaly.getRBParent().color=1; //il padre rosso
+                        anomaly.getRBParent().getRBLeft().color=0; //il fratello nero
+                        //ruoto a sinistra sul padre
+                        root=ruota_sx(root,anomaly.getRBParent());
+                    }
+                    //il fratello è nero
+                    if(anomaly.getRBParent().getRBLeft().getRBRight()!=null){
+                        //il fratello ha un figlio destro
+                        if(anomaly.getRBParent().getRBLeft().getRBLeft()!=null){
+                            //il fratello ha anche figlio sinistro
+                            if(anomaly.getRBParent().getRBLeft().getRBLeft().color==anomaly.getRBParent().getRBLeft().getRBRight().color && anomaly.getRBParent().getRBLeft().getRBRight().color==0){
+                                //i figli sono entrambi neri
+                                // caso 2
+                                anomaly.getRBParent().getRBLeft().color=1; //fratello rosso
+                                anomaly=anomaly.getRBParent(); //anomalia sale sul padre
+                            }else{
+                                //i figli non sono entrambi neri (almeno uno è rosso)
+                                if(anomaly.getRBParent().getRBLeft().getRBRight().color==0){
+                                    //il figlio destro del fratello è nero
+                                    //caso 3
+                                    anomaly.getRBParent().getRBLeft().color=anomaly.getRBParent().getRBLeft().getRBLeft().color; //scambio il colore del fratello col suo figlio sinistro
+                                    anomaly.getRBParent().getRBLeft().getRBLeft().color=0; //figlio sinistro del fratello nero
+                                    root=ruota_dx(root,anomaly.getRBParent().getRBLeft()); //ruotiamo a dx sul fratello
+                                }else{
+                                    //il figlio destro del fratello è rosso
+                                    //caso 4
+                                    anomaly.getRBParent().getRBLeft().color=anomaly.getRBParent().color; //il fratello prende il colore del padre
+                                    anomaly.getRBParent().color=0; //padre nero
+                                    anomaly.getRBParent().getRBLeft().getRBRight().color=0; //filgio destro del fratello nero
+                                    root=ruota_sx(root,anomaly.getRBParent());
+                                    anomaly=root; //sposto anomalia su radice perchè caso terminale
+                                }
+                            }
+                        }else{
+                            //il fratello ha solo un figlio destro
+                            if(anomaly.getRBParent().getRBLeft().getRBRight().color==0){
+                                //il figlio destro del fratello è nero
+                                //caso 3
+                                anomaly.getRBParent().getRBLeft().color=0; //scambio il colore del fratello col suo figlio sinistro
+                                root=ruota_dx(root,anomaly.getRBParent().getRBLeft()); //ruotiamo a dx sul fratello
+                            }else{
+                                //il figlio destro del fratello è rosso
+                                //caso 4
+                                anomaly.getRBParent().getRBLeft().color=anomaly.getRBParent().color; //il fratello prende il colore del padre
+                                anomaly.getRBParent().color=0; //padre nero
+                                anomaly.getRBParent().getRBLeft().getRBRight().color=0; //filgio destro del fratello nero
+                                root=ruota_sx(root,anomaly.getRBParent());
+                                anomaly=root; //sposto anomalia su radice perchè caso terminale
+                            }
+                        }
+                    }else{
+                        //il fratello non ha figlio destro
+                        //come fosse nero
+                        //caso 3
+                        if(anomaly.getRBParent().getRBLeft().getRBLeft()!=null){
+                            //il fratello ha però figlio sinitro
+                            anomaly.getRBParent().getRBLeft().color=anomaly.getRBParent().getRBLeft().getRBLeft().color; //scambio il colore del fratello col suo figlio sinistro
+                            anomaly.getRBParent().getRBLeft().getRBLeft().color=0; //figlio sinistro del fratello nero
+                            root=ruota_dx(root,anomaly.getRBParent().getRBLeft()); //ruotiamo a dx sul fratello
+                        }else{
+                            //il fratello non ha figli
+                            root=ruota_dx(root,anomaly.getRBParent().getRBLeft());
+                        }
+                    }
+                }else{
+                    //il fratello non esiste (come fosse nero)
+                    //allora anche i suoi figli non esistono
+                    /*
+                    * Attenzione assumo che in questo caso anomalia salga
+                    *
+                    *
+                    */
+                    anomaly=anomaly.getRBParent();
+                }
+            }
+        }
+        anomaly.color=0;
+        return root;
+    }
+    
     /**
      * Metodo che inserisce in un rbalbero un nodo dato
      * 
@@ -256,10 +603,18 @@ public class RBNode extends Node{
                         root=ruota_dx(root,newNode.getRBParent().getRBParent()); //ruoto a destra sul nonno
                     }
                 }else{
-                    //lo zio non esiste
-                    newNode.getRBParent().getRBParent().color=1; //nonno rosso
+                    //lo zio non esiste ma è come fosse nero
+                    //lo zio è nero
+                    if(newNode==newNode.getRBParent().getRBRight()){
+                        //l'anomalia è figlio destro caso 2
+                        newNode=newNode.getRBParent(); //sposto anomalia sul padre
+                        root=ruota_sx(root,newNode); //ruoto il sottoalbero radicato nel padre a sx
+                        //mi riconduco al caso 3
+                    }
+                    //l'anomalia è figlio sinistro caso 3
                     newNode.getRBParent().color=0; //padre nero
-                    newNode=newNode.getRBParent().getRBParent();//anomalia sul nonno
+                    newNode.getRBParent().getRBParent().color=1; //nonno rosso
+                    root=ruota_dx(root,newNode.getRBParent().getRBParent()); //ruoto a destra sul nonno
                 }
             }else{
                 //il padre è figlio destro
@@ -285,10 +640,18 @@ public class RBNode extends Node{
                         root=ruota_dx(root,newNode.getRBParent().getRBParent()); //ruoto a destra sul nonno
                     }
                 }else{
-                    //lo zio non esiste
-                    newNode.getRBParent().getRBParent().color=1; //nonno rosso
+                    //lo zio non esiste ma è come fosse nero
+                    //lo zio è nero
+                    if(newNode==newNode.getRBParent().getRBLeft()){
+                        //l'anomalia è figlio sinistro caso 2
+                        newNode=newNode.getRBParent(); //sposto anomalia sul padre
+                        root=ruota_sx(root,newNode); //ruoto il sottoalbero radicato nel padre a sx
+                        //mi riconduco al caso 3
+                    }
+                    //l'anomalia è figlio destro caso 3
                     newNode.getRBParent().color=0; //padre nero
-                    newNode=newNode.getRBParent().getRBParent();//anomalia sul nonno
+                    newNode.getRBParent().getRBParent().color=1; //nonno rosso
+                    root=ruota_dx(root,newNode.getRBParent().getRBParent()); //ruoto a destra sul nonno
                 }
             }
         }
