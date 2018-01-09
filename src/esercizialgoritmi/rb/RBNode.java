@@ -172,7 +172,8 @@ public class RBNode extends Node{
             oldright.left.parent=oldroot; //aggiorno anche il relativo figlio
         }
         oldright.left=oldroot; //il figlio destro della radice è la radice (prima della rotazione)
-        
+        oldright.size=oldroot.size;
+        oldroot.setSize();
         return root;
     }
     
@@ -214,6 +215,8 @@ public class RBNode extends Node{
             oldleft.right.parent=oldroot; //aggiorno anche il relativo figlio
         }
         oldleft.right=oldroot; //il figlio destro della radice è la radice (prima della rotazione)
+        oldleft.size=oldroot.size;
+        oldroot.setSize();
         return root;
     }
     
@@ -230,10 +233,12 @@ public class RBNode extends Node{
                     if(remNode==remNode.getRBParent().getRBLeft()){
                         //il nodo è figlio sinistro
                         remNode.getRBParent().left=null;
+                        update_size(remNode.parent);
                         return root;
                     }else{
                         //il nodo è figlio destro
                         remNode.getRBParent().right=null;
+                        update_size(remNode.parent);
                         return root;
                     }
                 }//sto eliminando la radice
@@ -247,16 +252,19 @@ public class RBNode extends Node{
                         if(remNode==remNode.getRBParent().getRBLeft()){
                             //il nodo da eliminare è figlio sinistro
                             remNode.getRBParent().left=remNode.getRBLeft();
+                            update_size(remNode.parent);
                             return root;
                         }else{
                             //il nodo da eliminare è figlio destro
                             remNode.getRBParent().right=remNode.getRBLeft();
+                            update_size(remNode.parent);
                             return root;
                         }
                     }else{
                         //sto eliminando la radice
                         root=remNode.getRBLeft();
                         root.color=0;
+                        update_size(root);
                         return root;
                     }
                 }else{
@@ -265,16 +273,19 @@ public class RBNode extends Node{
                         if(remNode==remNode.getRBParent().getRBLeft()){
                             //il nodo da eliminare è figlio sinistro
                             remNode.getRBParent().left=remNode.getRBRight();
+                            update_size(remNode.parent);
                             return root;
                         }else{
                             //il nodo da eliminare è figlio destro
                             remNode.getRBParent().right=remNode.getRBRight();
+                            update_size(remNode.parent);
                             return root;
                         }
                     }else{
                         //sto eliminando la radice
                         root=remNode.getRBRight();
                         root.color=0;
+                        update_size(root);
                         return root;
                     }
                 }
@@ -298,6 +309,7 @@ public class RBNode extends Node{
                     if(remNode.getRBParent().getRBLeft()==remNode){
                         //è figlio sinistro
                         remNode.getRBParent().left=null;
+                        update_size(remNode.parent);
                         if(remNode.getRBParent().color==0){
                             //il padre è nero anomalia sul padre
                             return delete_fixup(root,remNode.getRBParent());
@@ -309,6 +321,7 @@ public class RBNode extends Node{
                     }else{
                         //è figlio destro
                         remNode.getRBParent().right=null;
+                        update_size(remNode.parent);
                         if(remNode.getRBParent().color==0){
                             //il padre è nero anomalia sul padre
                             return delete_fixup(root,remNode.getRBParent());
@@ -329,6 +342,7 @@ public class RBNode extends Node{
                             if(remNode.getRBParent().getRBLeft()==remNode){
                                 //il nodo da eliminare è figlio sinistro
                                 remNode.getRBParent().left=remNode.left;
+                                update_size(remNode.parent);
                                 if(remNode.getRBParent().color==0){
                                     //il padre è nero
                                     return delete_fixup(root,remNode.getRBParent());
@@ -339,6 +353,7 @@ public class RBNode extends Node{
                             }else{
                                 //il nodo da eliminare è figlio destro
                                 remNode.getRBParent().right=remNode.left;
+                                update_size(remNode.parent);
                                 if(remNode.getRBParent().color==0){
                                     //il padre è nero
                                     return delete_fixup(root,remNode.getRBParent());
@@ -351,6 +366,7 @@ public class RBNode extends Node{
                         //sto eliminando la radice
                         root=remNode.getRBLeft();
                         root.color=0;
+                        update_size(root);
                         return root;
                     }else{
                         //ha un figlio destro
@@ -359,6 +375,7 @@ public class RBNode extends Node{
                             if(remNode.getRBParent().getRBLeft()==remNode){
                                 //il nodo da eliminare è figlio sinistro
                                 remNode.getRBParent().left=remNode.right;
+                                update_size(remNode.parent);
                                 if(remNode.getRBParent().color==0){
                                     //il padre è nero
                                     return delete_fixup(root,remNode.getRBParent());
@@ -369,6 +386,7 @@ public class RBNode extends Node{
                             }else{
                                 //il nodo da eliminare è figlio destro
                                 remNode.getRBParent().right=remNode.right;
+                                update_size(remNode.parent);
                                 if(remNode.getRBParent().color==0){
                                     //il padre è nero
                                     return delete_fixup(root,remNode.getRBParent());
@@ -381,6 +399,7 @@ public class RBNode extends Node{
                         //sto eliminando la radice
                         root=remNode.getRBRight();
                         root.color=0;
+                        update_size(root);
                         return root;
                     }
                 }else{

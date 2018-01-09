@@ -10,10 +10,13 @@ package esercizialgoritmi.rb;
  * @author AlanMichael
  */
 public class Node {
+
+    
     protected int value;
     protected Node parent;
     protected Node left;
     protected Node right;
+    protected int size;
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -23,12 +26,14 @@ public class Node {
         this.value=value;
         this.left=left_node;
         this.right=right_node;
+        this.size=1;
     }
     public Node(){
         this.parent=null;
         this.value=-1;
         this.left=null;
         this.right=null;
+        this.size=1;
     }
     
     /**
@@ -39,6 +44,7 @@ public class Node {
         this.value=to_copy.value;
         this.left=to_copy.left;
         this.right=to_copy.right;
+        this.size=to_copy.size;
     }
     public Node getParent(){
         return parent;
@@ -52,6 +58,9 @@ public class Node {
     public int getValue(){
         return value;
     }
+    public int getSize(){
+        return size;
+    }
     public void setParent(Node parent){
         this.parent=parent;
     }
@@ -63,6 +72,12 @@ public class Node {
     }
     public void setValue(int value){
         this.value=value;
+    }
+    protected void setSize(){
+        this.size=1; //nodo stesso
+        if(this.left!=null) this.size+=this.left.size; //figli nel sottoalbero di sx
+        if(this.right!=null) this.size+=this.right.size; //figli nel sottoalbero di dx
+        return;
     }
     @Override
     public String toString(){
@@ -92,6 +107,49 @@ public class Node {
             this.left.print(i);
         }
         i--;
+    }
+    
+    /**
+     * Metodo che restituisce il nodo che occupa la posizione i-esima
+     * 
+     * @param root, l'albero in cui cercare il nodo
+     * @param i, la posizione da cercare
+     * 
+     * @return il nodo che occupa tale posizione se esiste, null altrimenti
+     * 
+     * Complessità: log2n
+     */
+    public Node select(Node root, int i){
+        if(root==null) return null;
+        if(i<1) return null;
+        int j; //posizione del nodo attuale
+        if(root.left!=null){ //il nodo ha figlio sinistro
+            j=root.left.size+1;
+        }else{ //il nodo non ha figlio sinistro
+            j=1;
+        }
+        if(j==i) return this; //il nodo attuale occupa la posizione cercata
+        if(i<j){
+            //il nodo che cerco viene prima del nodo attuale
+            return select(root.left,i);
+        }else{
+            //il nodo che cerco viene dopo il nodo attuale
+            return select(root.right,i-j);
+        }
+    }
+    
+    /**
+     * Metodo che aggiorna i campi size dal nodo passato sino alla radice
+     * 
+     * @param node, il nodo da cui iniziare l'aggiornamento
+     */
+    protected static void update_size(Node node) {
+        while(node!=null){
+            //finchè non sono alla radice
+            node.setSize(); //aggiorno il suo campo
+            node=node.parent; //salgo verso la radice
+        }
+        return;
     }
     
     /**
@@ -132,7 +190,8 @@ public class Node {
             oldright.left.parent=oldroot; //aggiorno anche il relativo figlio
         }
         oldright.left=oldroot; //il figlio destro della radice è la radice (prima della rotazione)
-        
+        oldright.size=oldroot.size;
+        oldroot.setSize();
         return root;
     }
     
@@ -174,6 +233,8 @@ public class Node {
             oldleft.right.parent=oldroot; //aggiorno anche il relativo figlio
         }
         oldleft.right=oldroot; //il figlio destro della radice è la radice (prima della rotazione)
+        oldleft.size=oldroot.size;
+        oldroot.setSize();
         return root;
     }
     
@@ -255,11 +316,13 @@ public class Node {
             return newNode; //inserisco nodo attuale al posto dell'albero vuoto
         }
         Node real_root=root; //salvo la radice iniziale
+        newNode.size=1;
         while(true){
             if(newNode.value>root.value){//il nodo ha valore maggiore della radice
                 if(root.right==null){ //non ha figlio destro
                     root.right=newNode;
                     newNode.parent=root;
+                    update_size(newNode.parent);
                     return real_root;
                 }
                 root=root.right;
@@ -267,6 +330,7 @@ public class Node {
                 if(root.left==null){ //non ha figlio destro
                     root.left=newNode;
                     newNode.parent=root;
+                    update_size(newNode.parent);
                     return real_root;
                 }
                 root=root.left;
@@ -333,10 +397,12 @@ public class Node {
                 if(remNode==remNode.parent.left){
                     //è figlio sinistro
                     remNode.parent.left=null;
+                    update_size(remNode.parent);
                     return root;
                 }else{
                     //è figlio destro
                     remNode.parent.right=null;
+                    update_size(remNode.parent);
                     return root;
                 }
             }
@@ -351,15 +417,18 @@ public class Node {
                     if(remNode==remNode.parent.left){
                         //è figlio sinistro
                         remNode.parent.left=remNode.left;
+                        update_size(remNode.parent);
                         return root;
                     }else{
                         //è figlio destro
                         remNode.parent.right=remNode.left;
+                        update_size(remNode.parent);
                         return root;
                     }
                 }
                 //non ha padre è una radice
                 root=remNode.left;
+                update_size(root);
                 return root;
             }else{
                 //ha un figlio destro
@@ -367,19 +436,23 @@ public class Node {
                     if(remNode==remNode.parent.left){
                         //è figlio sinistro
                         remNode.parent.left=remNode.right;
+                        update_size(remNode.parent);
                         return root;
                     }else{
                         //è figlio destro
                         remNode.parent.right=remNode.right;
+                        update_size(remNode.parent);
                         return root;
                     }
                 }
                 //non ha padre è una radice
                 root=remNode.right;
+                update_size(root);
                 return root;
             }
         }
         //ha due figli
+        //aggiornare il campo size!!!!!
         //prendo il suo successore
         Node next=remNode.successore();
         //successore prende posto del nodo da rimuovere
