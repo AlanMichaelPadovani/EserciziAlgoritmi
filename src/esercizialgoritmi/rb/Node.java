@@ -119,7 +119,7 @@ public class Node {
      * 
      * Complessità: log2n
      */
-    public Node select(Node root, int i){
+    public static Node select(Node root, int i){
         if(root==null) return null;
         if(i<1) return null;
         int j; //posizione del nodo attuale
@@ -128,7 +128,7 @@ public class Node {
         }else{ //il nodo non ha figlio sinistro
             j=1;
         }
-        if(j==i) return this; //il nodo attuale occupa la posizione cercata
+        if(j==i) return root; //il nodo attuale occupa la posizione cercata
         if(i<j){
             //il nodo che cerco viene prima del nodo attuale
             return select(root.left,i);
@@ -138,6 +138,29 @@ public class Node {
         }
     }
     
+    /**
+     * Metodo che ritorna la posizione che occuperebbe il nodo attuale nella sequenza ordinata
+     * 
+     * @param node, il nodo da elaborare
+     * @return la posizione nella sequenza ordinata, 0 altrimenti
+     */
+    public int rank(Node node){
+        if(this==null || node==null) return 0;
+        int rank=1;
+        if(node.left!=null) rank=rank+node.left.size;
+        if(node==this) return rank;
+        Node y=node;
+        while(y!=this){
+            //if(y.parent!=null){
+                if(y==y.parent.right){ //è figlio destro
+                    rank=rank+1;
+                    if(y.parent.left!=null) rank=rank+y.parent.left.size;
+                }
+            //}
+            y=y.parent;
+        }
+        return rank;
+    }
     /**
      * Metodo che aggiorna i campi size dal nodo passato sino alla radice
      * 

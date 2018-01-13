@@ -138,6 +138,8 @@ public class EserciziAlgoritmi {
         rbRoot=RBNode.insert(rbRoot,new RBNode(1,null,5,null,null));
         rbRoot=RBNode.insert(rbRoot,new RBNode(0,null,4,null,null));
         rbRoot=RBNode.insert(rbRoot,new RBNode(0,null,3,null,null));
+        
+        /** Eliminazione
         //prova eliminazione
         System.out.println("Albero iniziale");
         rbRoot.print(0);
@@ -161,8 +163,14 @@ public class EserciziAlgoritmi {
         System.out.println("elimino un nodo rosso con due figli: 2");
         rbRoot=RBNode.delete(rbRoot, rbRoot.getRBLeft());
         rbRoot.print(0);
-        
-        
+        */
+        rbRoot.print(0);
+        System.out.println("Il rank della radice è: "+rbRoot.rank(rbRoot));
+        System.out.println("Il rank dell'ultimo nodo è: "+rbRoot.rank(rbRoot.getRight().getRight().getRight()));
+        System.out.println("Il rank dell penultimo nodo è: "+rbRoot.rank(rbRoot.getRight().getRight()));
+        System.out.println("Il rank di 5 è: "+rbRoot.rank(rbRoot.getRBLeft().getRBRight().getRBRight()));
+        System.out.println("Size di 14: "+rbRoot.getRBRight().getRBRight().getSize());
+        System.out.println("Size di 8: "+rbRoot.getRBRight().getRBLeft().getSize());
     }
     
     /**
