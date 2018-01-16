@@ -171,13 +171,18 @@ public class EserciziAlgoritmi {
         System.out.println("Il rank di 5 è: "+rbRoot.rank(rbRoot.getRBLeft().getRBRight().getRBRight()));
         System.out.println("Size di 14: "+rbRoot.getRBRight().getRBRight().getSize());
         System.out.println("Size di 8: "+rbRoot.getRBRight().getRBLeft().getSize());
+        
+        System.out.println("Numero partizioni palindrome di AAAA: "+partizionePalindroma("AAAA",0,3));
+        System.out.println("Numero partizioni palindrome di ABCDEFGH: "+partizionePalindroma("ABCDEFGH",0,7));
+        System.out.println("Numero partizioni palindrome di QWERTYTREWQWERT: "+partizionePalindroma("QWERTYTREWQWERT",0,14));
+        System.out.println("Numero partizioni palindrome di ABAFAABA: "+partizionePalindroma("ABAFAABA",0,7));
     }
     
     /**
      * Metodo che crea un array di interi in un certo range della lunghezza voluta
      * 
      * @param l lunghezza dell'array
-     * @param r il valore massimo che può avere ogni elemento
+     * @param range il valore massimo che può avere ogni elemento
      * 
      * @return l'array conforme alle specifiche
      * Complessità: n
@@ -190,6 +195,57 @@ public class EserciziAlgoritmi {
             a[i]=r.nextInt(range);
         }
         return a;
+    }
+    
+    /**
+     * Metodo che crea un array di interi inizializzati ad un valore dato
+     * 
+     * @param l, lunghezza dell'array
+     * @param value, il valore che assume ogni elemento
+     * 
+     * @return l'array conforme alle specifiche
+     * Complessità: n
+     */
+    private static int[] buildArrayInit(int l, int value){
+        int[] a=new int[l];
+        for(int i=0;i<l;i++) a[i]=value;
+        return a;
+    }
+    
+    /**
+     * Metodo che crea una matrice mxn di interi in un certo range
+     * 
+     * @param m, numero di righe della matrice
+     * @param n, numero di colonne della matrice
+     * @param range, il valore massimo che può avere ogni elemento
+     * 
+     * @return la matrice conforme alle specifiche
+     * Complessità: m*n
+     */
+    private static int[][] buildMatrix(int m, int n, int range){
+        int[][] matrix=new int[m][n];
+        for(int i=0;i<m;i++){
+            matrix[i]=buildArray(n,range);
+        }
+        return matrix;
+    }
+    
+    /**
+     * Metodo che crea una matrice mxn di interi inizializzata ad un certo valore
+     * 
+     * @param m, numero di righe della matrice
+     * @param n, numero di colonne della matrice
+     * @param value, il valore da assegnare ad ogni cella della matrice
+     * 
+     * @return la matrice conforme alle specifiche
+     * Complessità: m*n
+     */
+    private static int[][] buildMatrixInit(int m, int n, int value){
+        int[][] matrix=new int[m][n];
+        for(int i=0;i<m;i++){
+            matrix[i]=buildArrayInit(n,value);
+        }
+        return matrix;
     }
     
     /*
@@ -205,6 +261,111 @@ public class EserciziAlgoritmi {
         }
         System.out.println(a[i]);
         return;
+    }
+    
+    
+    /**
+     * Metodo che stampa una matrice
+     * 
+     * @param matrix, la matrice da stampare
+     * 
+     * Complessità: m*n
+     */
+    private static void printMatrix(int[][] matrix){
+        int m=matrix.length;
+        for(int i=0; i<m;i++) printArray(matrix[i]);
+        return;
+    }
+    
+    /**
+     * Metodo che crea la matrice di appoggio per poi chiamare il metodo di elaborazione
+     * 
+     * @param s, la stringa in cui calcolare le partizioni
+     * @param i, l'indice di inizio della stringa in cui cercare le partizioni
+     * @param j, l'indice di fine della stringa in cui cerca le partizioni
+     * 
+     * @return il numero minimo di partizioni palindrome
+     * 
+     * Complessità: j^2 + ?
+     */
+    private static int partizionePalindroma(String s, int i, int j){
+        return partizionePalindroma(s,i,j,buildMatrixInit(++j,++j,-1));
+    }
+    
+    /**
+     * Metodo che calcola il numero minimo di partizioni palindrome in una stringa
+     * 
+     * @param s, la stringa in cui calcolare le partizioni
+     * @param i, l'indice di inizio della stringa in cui cercare le partizioni
+     * @param j, l'indice di fine della stringa in cui cerca le partizioni
+     * @param matrix, la matrice ix(j-i) che contiene se la stringa da i a j è palindroma
+     * 
+     * @return il numero minimo di partizioni palindrome
+     * 
+     * Complessità: ?
+     */
+    private static int partizionePalindroma(String s, int i, int j,int[][] matrix){
+        if(i>j) return 0;
+        int result=matrix[i][j];
+        int end=j,start=i;
+        boolean flag=true;
+        while(result!=1 && flag){
+            if(result==-1){//non ho ancora verificato se questa stringa è palindroma
+                result=(isPalindroma(s,i,j)? 1 : 0);
+                matrix[i][j]=result;
+                if(result==1) flag=false;
+                else j--;
+            }else{//la stringa non è palindroma
+                j--;
+            }
+            result=matrix[i][j]; //aggiorno invariante
+        }
+        int z1=j-i;
+        flag=true;
+        result=matrix[i][end];
+        while(result!=1 && flag){
+            if(result==-1){//non ho calcolato se è palindroma
+                result=(isPalindroma(s,i,end)? 1 : 0);
+                matrix[i][end]=result;
+                if(result==1) flag=false;
+                else i++;
+            }else{//stringa non è palindroma
+                i++;
+            }
+            result=matrix[i][end];
+        }
+        int z2=end-i;
+        if(z1>z2){//la stringa è palindroma da i-j compresi
+            start=++j;
+            return 1+partizionePalindroma(s,start,end);
+        }
+        //la stringa è palindroma da i a end compresi
+        end=--i;
+        return 1+partizionePalindroma(s,start,end);
+    }
+    /**
+     * Metodo che verifica se una sottostringa è palindroma
+     * 
+     * @param s, la stringa in cui eseguire l'algoritmo
+     * @param i,l'indice di partenza della sottostringa
+     * @param j, l'idice di fine della sottostringa
+     * 
+     * @return true se la sottostringa da i a j è palindroma, false altrimenti
+     * 
+     * Complessità: n (j-i)
+     */
+    private static boolean isPalindroma(String s, int i, int j){
+        if(j-i==0 || i-j==1){
+            return true;
+        }
+        if(j<i || j>=s.length()){
+            return false;
+        }
+        if(s.charAt(i)==s.charAt(j)){
+            return isPalindroma(s,++i,--j);
+        }else{
+            return false;
+        }
     }
     
     /**
