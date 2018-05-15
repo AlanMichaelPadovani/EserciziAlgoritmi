@@ -8,7 +8,10 @@ import esercizialgoritmi.rb.Node;
 import esercizialgoritmi.rb.RBNode;
 import esercizialgoritmi.rb.UtilityRBTree;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Random;
+import javafx.util.Pair;
+
 /**
  *
  * @author AlanMichael
@@ -176,7 +179,17 @@ public class EserciziAlgoritmi {
         System.out.println("Numero partizioni palindrome di ABCDEFGH: "+partizionePalindroma("ABCDEFGH",0,7));
         System.out.println("Numero partizioni palindrome di QWERTYTREWQWERT: "+partizionePalindroma("QWERTYTREWQWERT",0,14));
         System.out.println("Numero partizioni palindrome di ABAFAABA: "+partizionePalindroma("ABAFAABA",0,7));
+        
+        System.out.println("La compatibilità tra MARIO e MARIA è: "+compatibilità("MARIO","MARIA",0,0,1).getKey()+", "+compatibilità("MARIO","MARIA",0,0,1).getValue());
+        int[] arr= {9,15,3,6,4,2,5,10,3};
+        System.out.println("La massima sequenza crescente in ");
+        printArray(arr);
+        LinkedList returna=max_seq(arr,0);
+        System.out.print(" è: "+returna.toString());
+    
+    
     }
+    
     
     /**
      * Metodo che crea un array di interi in un certo range della lunghezza voluta
@@ -343,6 +356,7 @@ public class EserciziAlgoritmi {
         end=--i;
         return 1+partizionePalindroma(s,start,end);
     }
+    
     /**
      * Metodo che verifica se una sottostringa è palindroma
      * 
@@ -366,6 +380,96 @@ public class EserciziAlgoritmi {
         }else{
             return false;
         }
+    }
+    
+    private static double PN(String[] w, int c){
+        int[] s=buildArrayInit(w.length,0);
+        double[] m=new double[w.length];
+        for(double el: m) el=-1;
+        int[] car=buildArrayInit(w.length,0);
+        for(int i=0; i<w.length; i++){
+            car[i]=w[i].length();
+            if(i>0) car[i]=car[i]+car[i-1];
+        }
+        return PN(w,c,0,m,s,car);
+    }
+    
+    private static double PN(String [] w, int c, int i, double[] m, int[] s, int[] car){
+        if(m[i]!=-1) return m[i]; //ho già calcolato il costo
+        int length=w.length;
+        int a=car[length-1]-car[i]+w[i].length()+length-i; //caratteri più spazi
+        if(a<=c){
+            m[i]=(length-i)*(length-i)*(length-i);
+            return m[i];
+        }else{
+            int min=-1;
+            //for(int j=i; j++; )
+            return -1;
+        }
+    }
+    private static LinkedList max_seq(int [] s, int i){
+        LinkedList result= new LinkedList();
+        if(i==s.length-1){
+            result.add(s[i]);
+            return result;
+        }
+        int len=0;
+        LinkedList actual=new LinkedList();
+        for(int j=i+1; j<s.length; j++){
+            if(s[j]>s[i]){
+                actual=new LinkedList();
+                actual.add(s[j]);
+                LinkedList seq=new LinkedList();
+                seq=max_seq(s,j);
+                for(Object obj: seq){
+                    int num=(int) obj;
+                    actual.add(num);
+                }
+                if(actual.size() >len){
+                    result=actual;
+                    len=actual.size();
+                }
+            }
+        }
+        LinkedList not=max_seq(s,++i);
+        return(not.size()>len ? not : result);
+        
+    }
+    /**
+     * Metodo che calcola la compatibilità tra due stringe
+     * 
+     * @param s1, la prima stringa
+     * @param s2, la seconda stringa
+     * @param i, l'indice del primo carattere nella prima stringa
+     * @param j, l'indice del primo carattere nella seconda stringa
+     * @param p, il numero di possibili stringhe compatibili
+     * 
+     * @return una tupla che contiene la lunghezza della stringa che contiene entrambe e il numero di stringhe possibili
+     */
+    private static Pair<Integer,Integer> compatibilità(String s1,String s2, int i, int j, int p){
+        if(i>s1.length()-1){
+            //la prima stringa è finita
+            if(j>s2.length()-1) return new Pair<>(0,0); //anche la seconda
+            return new Pair<>(s2.length()-j,1);
+        }
+        if(j>s2.length()-1){
+            //la seconda stringa è finita
+            if(i>s1.length()-1) return new Pair<>(0,0); //anche la prima
+            return new Pair<>(s1.length()-i,1);
+        }
+        //caratteri uguali c'è solo una possibilità aggiungo quel carattere alla stringa
+        if(s1.charAt(i)==s2.charAt(j)) return new Pair<>(1+compatibilità(s1,s2,++i,++j,p).getKey(),p);
+        //caratteri diversi
+        int i1=i,j1=j;
+        Pair<Integer,Integer> z1=compatibilità(s1,s2,++i,j,p);
+        Pair<Integer,Integer> z2=compatibilità(s1,s2,i1,++j1,p);
+        //confronto le lunghezze considerndo un carattere o l'altro
+        if(!(z1.getKey().equals(z2.getKey()))){
+            if(z1.getKey()<z2.getKey()) return z1;
+            return z2;
+        }
+        //le lunghezze sono uguali
+        return new Pair<>(z1.getKey(),z1.getValue()+z2.getValue());
     }
     
     /**
